@@ -1,42 +1,33 @@
-# DDS Generator with Asynchronous FIFO in Verilog
+# Direct Digital Synthesis (DDS) Generator with Asynchronous FIFO in Verilog
 
-## 📌 Overview
-This project implements a **Direct Digital Synthesis (DDS) Sine Wave Generator** interfaced with an **Asynchronous FIFO Buffer** in Verilog RTL.
+## 📌 Project Overview
+This repository contains a complete Verilog RTL implementation of a **Direct Digital Synthesis (DDS) Waveform Generator** integrated with a **5-bit Asynchronous FIFO Buffer**. 
 
-It uses Xilinx's **DDS Compiler IP** over an **AXI4-Stream interface** to generate continuous sine wave samples. The output is buffered into a dual-clock FIFO to ensure safe **Cross-Clock Domain (CDC)** transfer between a 100 MHz DDS domain and a 25 MHz system read domain.
+The design instantiates Xilinx's **DDS Compiler IP** using the **AXI4-Stream interface** to generate continuous digital sine wave samples, which are then safely transferred across asynchronous clock domains using Gray-code pointer synchronization.
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture & Block Diagram
+- **DDS Core Clock (`dds_clk`):** 100 MHz
+- **FIFO Read Clock (`fifo_rd_clk`):** 25 MHz
+- **Clock Domain Crossing (CDC):** Handled via 2-stage flip-flop synchronizers with 5-bit Gray Code pointers.
 
-[ Phase Inc ] ──> [ DDS Compiler IP ] ──(100 MHz)──> [ Async FIFO ] ──(25 MHz)──> [ Sine Output ]
-                     (AXI4-Stream)                      (Gray Pointers)                  
+---
 
-Parameters and Specifications:
-System Read Clock (fifo_rd_clk): 25 MHz
-DDS Output Format: 16-bit Signed Sine Wave
-Phase Accumulator Width: 16-bit
-DDS Interface: AXI4-Stream Protocol
-FIFO Memory Depth: 16 Locations
-FIFO Data width: 16-bit
-CDC Synchronization: 5-bit Gray Code Pointers with 2-Stage Synchronizers
-FIFO Status Flags: Full and Empty
+## 📁 Repository Structure
+* `rtl/dds_top.v` - Top-level wrapper module connecting DDS IP and Asynchronous FIFO.
+* `rtl/asynch_fifo.v` - Synthesizable 16-deep, 16-bit wide dual-clock FIFO design.
+* `sim/tb_dds_top.v` - Multi-clock testbench driving dynamic frequency scaling and CDC verification.
 
-📁 Repository Structure
-DDS-Compiler-Async-FIFO-Verilog/
-├── rtl/
-│   ├── dds_top.v            # Top-level wrapper connecting DDS IP & FIFO
-│   └── asynch_fifo.v        # Synthesizable 16x16 Dual-Clock Async FIFO
-├── sim/
-│   └── tb_dds_top.v         # Multi-clock simulation testbench
-├── .gitignore
-└── README.md
+---
 
-🚀 Quick Start (Vivado Simulation):
-Create Project: Open Vivado, create an RTL project, andadd rtl/dds_top.v and rtl/asynch_fifo.v as Design Sources.
-Add sim/tb_dds_top.v as Simulation Source.Add DDS IP: Open IP Catalog $\rightarrow$ Select DDS Compiler (100 MHz clock, Streaming Phase Inc, 16-bit Phase/Output Width, Sine output).
-Run Simulation:Set tb_dds_top.v as Top Module under Simulation Sources.
-Click Run Behavioral Simulation.In the Waveform window, format fifo_dout[15:0] to Signed Decimal and Analog Wave Style to view the sine wave.
+## 🚀 How to Run Simulation in Xilinx Vivado
+1. Open **Vivado** and create a new RTL project.
+2. Add `dds_top.v` and `asynch_fifo.v` as **Design Sources**.
+3. Configure the **DDS Compiler IP** (16-bit Phase Width, 16-bit Output Width, Streaming Phase Increment).
+4. Add `tb_dds_top.v` as a **Simulation Source**.
+5. Set `tb_dds_top` as the **Top Module** for simulation.
+6. Run **Behavioral Simulation** and set `fifo_dout` to **Signed Decimal** and **Analog Wave Style**.
 
 📜 License
 This project is licensed under the MIT License.
