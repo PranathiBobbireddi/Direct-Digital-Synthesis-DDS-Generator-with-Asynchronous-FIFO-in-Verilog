@@ -1,0 +1,14 @@
+# Vivado build & log files
+*.log
+*.jou
+*.pb
+*.str
+*.wcfg
+.Xil/
+xsim.dir/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.srcs/
