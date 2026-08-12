@@ -1,0 +1,10 @@
+DDS-Compiler-Async-FIFO-Verilog/
+├── rtl/
+│   ├── dds_top.v
+│   └── asynch_fifo.v
+├── sim/
+│   └── tb_dds_top.v
+├── ip/
+│   └── dds_compiler_0.xci   (Optional: The IP configuration file)
+├── .gitignore
+└── README.md
